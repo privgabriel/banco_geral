@@ -42,3 +42,111 @@ INSERT INTO tarefas (descricao, usuario_id, categoria_id) VALUES ('Estudar Java'
 INSERT INTO tarefas (descricao, usuario_id, categoria_id) VALUES ('Estudar PHP', 4, 2);
 INSERT INTO tarefas (descricao, usuario_id, categoria_id) VALUES ('Estudar Ruby', 5, 2);
 
+SELECT
+    u.nome,
+    c.descricao,
+    t.descricao
+FROM
+    usuarios AS u,
+    categorias AS c,
+    tarefas AS t
+WHERE
+    u.id = t.usuario_id AND
+    c.id = t.categoria_id;
+
+SELECT
+    u.nome AS nome_usuario,
+    c.descricao AS descricao_categoria,
+    t.descricao AS descricao_tarefa
+FROM
+    usuarios u
+INNER JOIN
+    tarefas t ON u.id = t.usuario_id
+INNER JOIN
+    categorias c ON c.id = t.categoria_id;
+
+SELECT
+    u.nome AS nome_usuario,
+    c.descricao AS descricao_categoria
+FROM
+    usuarios u
+LEFT JOIN
+    tarefas t ON u.id = t.usuario_id
+LEFT JOIN
+    categorias c ON c.id = t.categoria_id;
+
+SELECT
+    u.nome AS nome_usuario,
+    c.descricao AS descricao_categoria,
+    t.descricao AS descricao_tarefa
+FROM
+    usuarios u
+LEFT JOIN
+    tarefas t ON u.id = t.usuario_id
+LEFT JOIN
+    categorias c ON c.id = t.categoria_id;
+
+SELECT
+    u.nome AS nome_usuario,
+    c.descricao AS descricao_categoria
+FROM
+    usuarios u
+RIGHT JOIN
+    tarefas t ON u.id = t.usuario_id
+RIGHT JOIN
+    categorias c ON c.id = t.categoria_id;
+
+
+SELECT
+    u.nome AS nome_usuario,
+    c.descricao AS descricao_categoria
+FROM
+    usuarios u
+FULL OUTER JOIN
+    tarefas t ON u.id = t.usuario_id
+FULL OUTER JOIN
+    categorias c ON c.id = t.categoria_id;
+
+SELECT
+    u.nome AS nome_usuario,
+    c.descricao AS descricao_categoria,
+    t.descricao AS descricao_tarefa
+FROM
+    usuarios u
+FULL OUTER JOIN
+    tarefas t ON u.id = t.usuario_id
+FULL OUTER JOIN
+    categorias c ON c.id = t.categoria_id;
+
+SELECT count(*) FROM usuarios;
+SELECT min(id) FROM usuarios;
+SELECT max(id) FROM usuarios;
+select avg(id) from usuarios;
+SELECT sum(id) FROM usuarios;
+
+SELECT
+    u.nome AS nome_usuario,
+    c.descricao AS descricao_categoria,
+    t.descricao AS descricao_tarefa
+FROM
+    usuarios u
+INNER JOIN
+    tarefas t ON u.id = t.usuario_id
+INNER JOIN
+    categorias c ON c.id = t.categoria_id
+GROUP BY
+    u.nome, c.descricao, t.descricao
+HAVING
+    COUNT(u.id) > 1;
+
+SELECT
+    u.nome AS nome_usuario,
+    c.descricao AS descricao_categoria,
+    t.descricao AS descricao_tarefa
+FROM
+    usuarios u
+INNER JOIN
+    tarefas t ON u.id = t.usuario_id
+INNER JOIN
+    categorias c ON c.id = t.categoria_id
+ORDER BY RANDOM();
