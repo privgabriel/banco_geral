@@ -69,13 +69,20 @@ ORDER BY
     f.nome;
 
 
-SELECT
-    f.nome AS funcionario_nome,
-    d.descricao AS departamento_nome,
-    c.nome AS cidade_nome
-FROM
-    funcionarios AS f
-INNER JOIN
-    departamentos AS d ON f.dept_id = d.id
-INNER JOIN
-    cidades AS c ON f.cidade_id = c.id;
+SELECT f.nome      AS funcionario_nome,
+       d.descricao AS departamento_nome,
+       c.nome      AS cidade_nome
+FROM funcionarios AS f
+         INNER JOIN
+     departamentos AS d ON f.dept_id = d.id
+         INNER JOIN
+     cidades AS c ON f.cidade_id = c.id;
+
+SELECT f.nome      AS funcionario_nome,
+       d.descricao AS departamento_nome,
+       c.nome      AS cidade_nome
+FROM funcionarios AS f
+         INNER JOIN
+     departamentos AS d ON f.dept_id = d.id
+         INNER JOIN
+     cidades AS c ON f.cidade_id = c.id;
