@@ -79,3 +79,5 @@ INNER JOIN
     departamentos AS d ON f.dept_id = d.id
 INNER JOIN
     cidades AS c ON f.cidade_id = c.id;
+
+SELECT * FROM funcionarios;
