@@ -2,8 +2,12 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/banco_dados_aplicado/aula03.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/banco_dados_aplicado/aula04.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/banco_dados_aplicado/desafio.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/banco_dados_aplicado/function_pl.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/banco_dados_aplicado/stored_procedure.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/desenvolvimento_de_sistemas_2/projeto_dev_2.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/projeto_dev2/projeto.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/projeto_dev2/sql's.sql" dialect="PostgreSQL" />
   </component>
 </project>
