@@ -1,13 +1,30 @@
-1)
-CREATE OR REPLACE FUNCTION atualizar_estoque()
+### README: Triggers e Procedures para Gestão de Vendas e Usuários
+
+Este documento descreve as **triggers** e **procedures** implementadas para atualizar o estoque de produtos e fazer backup de dados de usuários excluídos, assim como monitorar alterações em registros de usuários.
+
+---
+
+### 1. Atualização de Estoque de Produtos
+
+**Objetivo:** Atualizar automaticamente a quantidade de produtos em estoque ao registrar uma nova venda.
+
+#### Tabelas Envolvidas:
+
+- **Produto (cod_prod, descricao, qtd_disponivel)**
+- **ItensVenda (cod_venda, id_produto, qtd_vendida)**
+
+#### Função e Trigger:
+
+```sql
+CREATE OR REPLACE FUNCTION atualizar_estoque_venda()
 RETURNS TRIGGER AS $$
 BEGIN
-  UPDATE Produtos
+  UPDATE Produto
   SET qtd_disponivel = qtd_disponivel - NEW.qtd_vendida
   WHERE cod_prod = NEW.id_produto;
-  
-  IF (SELECT qtd_disponivel FROM Produtos WHERE cod_prod = NEW.id_produto) < 0 THEN
-    RAISE EXCEPTION 'Quantidade insuficiente no estoque para o produto %', NEW.id_produto;
+
+  IF (SELECT qtd_disponivel FROM Produto WHERE cod_prod = NEW.id_produto) < 0 THEN
+    RAISE EXCEPTION 'Estoque insuficiente para o produto %', NEW.id_produto;
   END IF;
 
   RETURN NEW;
@@ -17,30 +34,72 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER trigger_atualizar_estoque
 AFTER INSERT ON ItensVenda
 FOR EACH ROW
-EXECUTE FUNCTION atualizar_estoque();
+EXECUTE FUNCTION atualizar_estoque_venda();
+```
 
-INSERT INTO ItensVenda (cod_venda, id_produto, qtd_vendida)
-VALUES (1, 101, 3);
+---
 
-2)
+### 2. Backup de Usuários Excluídos
 
-CREATE OR REPLACE PROCEDURE excluir_usuario(p_id INT) AS $$
+**Objetivo:** Fazer o backup de dados de usuários excluídos na tabela `tb_bkp_usuarios`.
+
+#### Tabelas Envolvidas:
+
+- **tb_usuarios (id, nome, senha)**
+- **tb_bkp_usuarios (id, nome, senha)**
+
+#### Função e Trigger:
+
+```sql
+CREATE OR REPLACE FUNCTION bkp_usuario_excluido()
+RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO tb_bkp_usuarios (id, nome, senha)
-  SELECT id, nome, senha
-  FROM tb_usuarios
-  WHERE id = p_id;
+  VALUES (OLD.id, OLD.nome, OLD.senha);
 
-  DELETE FROM tb_usuarios
-  WHERE id = p_id;
-
-  IF NOT FOUND THEN
-    RAISE NOTICE 'Usuário com ID % não encontrado.', p_id;
-  ELSE
-    RAISE NOTICE 'Usuário com ID % foi excluído e backup foi criado.', p_id;
-  END IF;
+  RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
 
-CALL excluir_usuario(5);
+CREATE TRIGGER trigger_bkp_usuario
+AFTER DELETE ON tb_usuarios
+FOR EACH ROW
+EXECUTE FUNCTION bkp_usuario_excluido();
+```
 
+---
+
+### 3. Backup de Dados de Usuários Atualizados
+
+**Objetivo:** Fazer o backup de dados antigos de usuários antes de qualquer atualização nos registros.
+
+#### Tabelas Envolvidas:
+
+- **tb_usuarios (id, nome, senha)**
+- **tb_bkp_usuarios (id, nome, senha)**
+
+#### Função e Trigger:
+
+```sql
+CREATE OR REPLACE FUNCTION bkp_usuario_atualizado()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO tb_bkp_usuarios (id, nome, senha)
+  VALUES (OLD.id, OLD.nome, OLD.senha);
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_bkp_usuario_update
+BEFORE UPDATE ON tb_usuarios
+FOR EACH ROW
+EXECUTE FUNCTION bkp_usuario_atualizado();
+```
+
+---
+
+### Considerações Finais
+
+- As triggers são configuradas para **INSERT**, **UPDATE** e **DELETE** para garantir que os dados de estoque e usuários sejam atualizados de forma consistente.
+- A implementação garante a integridade dos dados, como evitar vendas com estoque insuficiente e manter um histórico dos usuários excluídos e atualizados.
