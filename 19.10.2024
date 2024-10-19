@@ -1,0 +1,46 @@
+1)
+CREATE OR REPLACE FUNCTION atualizar_estoque()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE Produtos
+  SET qtd_disponivel = qtd_disponivel - NEW.qtd_vendida
+  WHERE cod_prod = NEW.id_produto;
+  
+  IF (SELECT qtd_disponivel FROM Produtos WHERE cod_prod = NEW.id_produto) < 0 THEN
+    RAISE EXCEPTION 'Quantidade insuficiente no estoque para o produto %', NEW.id_produto;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_atualizar_estoque
+AFTER INSERT ON ItensVenda
+FOR EACH ROW
+EXECUTE FUNCTION atualizar_estoque();
+
+INSERT INTO ItensVenda (cod_venda, id_produto, qtd_vendida)
+VALUES (1, 101, 3);
+
+2)
+
+CREATE OR REPLACE PROCEDURE excluir_usuario(p_id INT) AS $$
+BEGIN
+  INSERT INTO tb_bkp_usuarios (id, nome, senha)
+  SELECT id, nome, senha
+  FROM tb_usuarios
+  WHERE id = p_id;
+
+  DELETE FROM tb_usuarios
+  WHERE id = p_id;
+
+  IF NOT FOUND THEN
+    RAISE NOTICE 'Usuário com ID % não encontrado.', p_id;
+  ELSE
+    RAISE NOTICE 'Usuário com ID % foi excluído e backup foi criado.', p_id;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CALL excluir_usuario(5);
+
