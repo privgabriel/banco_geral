@@ -77,8 +77,6 @@ INSERT INTO tabela_vendas (cgc_loja, cpf, numero_chassi, data_venda, valor_venda
 ('LOJA002', '23456789012', 'CHASSI002', '2024-01-15', 26000.00, 2600.00),
 ('LOJA001', '12345678901', 'CHASSI002', '2024-02-01', 28000.00, 2800.00);
 
--- Consultas para responder às perguntas
-
 -- 1. Total das vendas de uma determinada loja, num determinado período
 SELECT 
     l.nome AS loja, 
