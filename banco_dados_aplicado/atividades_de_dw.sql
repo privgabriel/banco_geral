@@ -1,3 +1,4 @@
+use banco_dados_aplicado;
 CREATE TABLE tabela_loja (
     cgc_loja CHAR(12) PRIMARY KEY,
     nome CHAR(30),
@@ -139,14 +140,16 @@ ORDER BY
 
 -- 5. Veículos de maior aceitação numa determinada região (exemplo: por cidade)
 SELECT 
-    v.modelo,
+    tb_v.modelo,
     l.cidade,
     COUNT(v.numero_chassi) AS total_vendas
 FROM 
     tabela_vendas v
 JOIN 
     tabela_loja l ON v.cgc_loja = l.cgc_loja
+INNER JOIN tabela_veiculo AS tb_v
 GROUP BY 
-    v.modelo, l.cidade
+    tb_v.modelo, l.cidade
 ORDER BY 
     total_vendas DESC;
+
