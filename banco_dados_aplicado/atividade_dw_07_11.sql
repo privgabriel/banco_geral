@@ -45,14 +45,6 @@ CREATE TABLE dim_tempo (
     dia_da_semana VARCHAR(10)
 );
 
-SELECT
-    SUM(DATEDIFF(Dim_Tempo.data, Fato_Entregas.data_saida)) AS tempo_total_entrega
-FROM
-    Fato_Entregas
-JOIN
-    Dim_Tempo ON Fato_Entregas.tempo_chegada_sk = Dim_Tempo.tempo_sk;
-
-
 ALTER TABLE dim_tempo MODIFY dia_da_semana VARCHAR(25);
 
 INSERT INTO dim_tempo (data, ano, mes, dia, dia_da_semana) VALUES
@@ -138,7 +130,7 @@ JOIN
 
 -- //  Cálculo do Custo Médio por Quilômetro -----
 
-SELECT AVG(valor_total / quilometragem) AS custo_medio_quilometro FROM fato_entregas;
+SELECT AVG(valor_total / quilometragem) AS custo_medio_quilometro FROM fato_entregas;x
 
 
 
