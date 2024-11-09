@@ -1,4 +1,6 @@
+CREATE DATABASE banco_dados_aplicado;
 use banco_dados_aplicado;
+
 CREATE TABLE dim_loja (
     cgc_loja CHAR(12) PRIMARY KEY,
     nome CHAR(30),
