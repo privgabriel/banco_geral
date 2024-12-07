@@ -127,7 +127,7 @@ JOIN
 GROUP BY 
     c.cpf, c.nome, c.renda
 HAVING 
-    COUNT(v.venda_id) > 1 -- Exemplo: clientes que compraram mais de uma vez
+    COUNT(v.venda_id) > 1
 ORDER BY 
     c.renda DESC;
 
